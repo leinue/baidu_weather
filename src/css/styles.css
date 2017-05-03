@@ -26,5 +26,13 @@ body {
 	background: url(../imgs/phone.png);
 	width: 350px;
 	height: 760px;
-	background-size: 100%;
+    background-size: cover;
+}
+
+.phone-frame iframe {
+    min-width: 326px;
+    width: 338px;
+    height: 560px;
+    margin: 100px 6px;
+   	border: 0px;
 }
