@@ -1,9 +1,53 @@
 html {
 	height: 100%;
+	background: #ecf6fb;
+	color: #a7a2ff;
 }
 
 body {
 	width: 100%;
+}
+
+a {
+  	color: #a7a2ff;
+	position: relative;
+  	-webkit-transition: 0.3s;
+  	-o-transition: 0.3s;
+  	transition: 0.3s;
+  	display: -moz-inline-stack;
+  	display: inline-block;
+  	zoom: 1;
+  	*display: inline;
+  	font-weight: 100;
+  	padding: 10px;
+  	text-decoration: none;
+}
+
+a:after {
+  	bottom: 0;
+  	left: 0;
+  	position: absolute;
+  	height: 5px;
+  	width: 100%;
+  	z-index: -1;
+  	content: "";
+  	background: #a7a2ff;
+  	-webkit-transition: 0.3s;
+  	-o-transition: 0.3s;
+  	transition: 0.3s;
+}
+
+a:hover, a:focus, a:active {
+	color: #ffffff;
+}
+
+a:hover:after, a:active:after, a:focus:after {
+  	bottom: 0;
+  	left: 0;
+  	height: 100%;
+  	width: 100%;
+  	z-index: -1;
+  	content: "";
 }
 
 .grid {
@@ -35,4 +79,13 @@ body {
     height: 560px;
     margin: 100px 6px;
    	border: 0px;
+}
+
+.info-header {
+	text-align: center;
+}
+
+.info-header h1 {
+	font-weight: 200;
+	font-size: 2.4em;
 }
