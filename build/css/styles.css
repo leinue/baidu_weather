@@ -1,0 +1,271 @@
+html {
+	height: 100%;
+	background: #ecf6fb;
+	color: #313538;
+  	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+body {
+	width: 100%;
+}
+
+button, .btn {
+	display: inline-block;
+    color: #26a2ff;
+    padding: 10px;
+    width: 200px;
+    border: 2px solid #26a2ff;
+    border-radius: 5px;
+    font-size: 18px;
+    background: transparent;
+    transition: 0.3s;
+    cursor: pointer;
+    text-align: center;
+}
+
+button:hover, .btn:hover {
+	color: #fff;
+	background-color: #26a2ff;
+}
+
+.btn:after {
+	height: 0px;
+	background: #26a2ff;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-weight: 100;
+}
+
+a {
+  	color: #26a2ff;
+	position: relative;
+  	-webkit-transition: 0.3s;
+  	-o-transition: 0.3s;
+  	transition: 0.3s;
+  	display: -moz-inline-stack;
+  	display: inline-block;
+  	zoom: 1;
+  	*display: inline;
+  	font-weight: 100;
+  	padding: 10px;
+  	padding-left: 14px;
+  	text-decoration: none;
+  	cursor: pointer;
+}
+
+a:after {
+  	bottom: 0;
+  	left: 0;
+  	position: absolute;
+  	height: 5px;
+  	width: 100%;
+  	z-index: -1;
+  	content: "";
+  	background: #26a2ff;
+  	-webkit-transition: 0.3s;
+  	-o-transition: 0.3s;
+  	transition: 0.3s;
+}
+
+a:hover, a:focus, a:active {
+	color: #ffffff;
+}
+
+a:hover:after, a:active:after, a:focus:after {
+  	bottom: 0;
+  	left: 0;
+  	height: 100%;
+  	width: 100%;
+  	z-index: -1;
+  	content: "";
+}
+
+.grid {
+	display: flex;
+}
+
+.grid-cell {
+	flex: 1;
+}
+
+.center-area {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100vh;
+	justify-content: center;
+}
+
+.phone-frame {
+	background: url(../imgs/phone.png);
+	width: 350px;
+	height: 760px;
+    background-size: cover;
+}
+
+.phone-frame iframe {
+    min-width: 326px;
+    width: 338px;
+    height: 560px;
+    margin: 100px 6px;
+   	border: 0px;
+}
+
+.my-info {
+	width: 100%;
+	height: 80%;
+	text-align: right;
+}
+
+.info-header {
+	text-align: center;
+	margin-bottom: 15px;
+}
+
+.info-header h1 {
+	font-weight: 200;
+	font-size: 2em;
+	letter-spacing: 4px;
+}
+
+.info-header h2 {
+	letter-spacing: 6px;
+}
+
+.info-tip {
+	text-align: left;
+	padding: 10px;
+	padding-left: 50px;
+	padding-bottom: 30px;
+	font-weight: 600;
+}
+
+.triangle {
+	width: 0;
+	height: 0;
+	border-width: 40px;
+	border-style: solid;
+	border-color: transparent transparent #3e4243 transparent;
+}
+
+.pos {
+	display: inline-block;
+	margin-top: 50px;
+}
+
+.info-content {
+	text-align: center;
+	padding-top: 30px;
+}
+
+.tech-list {
+	padding: 20px;
+	text-align: left;
+	padding-left: 80px;
+}
+
+.info-footer {
+	margin-top: 50px;
+}
+
+.logo {
+	width: 50px;
+	height: 50px;
+	background-size: cover;
+	transition: 0.3s;
+}
+
+.logo:hover {
+	transform: scale(1.5);
+}
+
+.logo.vuejs {
+	background-image: url(../imgs/vuelogo.png);
+}
+
+.logo.git {
+	margin-top: 24px;
+	background-image: url(../imgs/gitlogo.png);
+}
+
+.logo.html5 {
+	background-image: url(../imgs/html5logo.png);
+}
+
+.logo.css3 {
+	background-image: url(../imgs/css3logo.png);
+}
+
+.logo.javascript {
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-image: url(../imgs/jslogo.png);
+}
+
+.logo.gulp {
+	height: 80px;
+	background-position: center;
+	background-size: 100% 100%;
+	background-image: url(../imgs/gulplogo.png);
+}
+
+.logo.npm {
+	margin-top: 24px;
+	width: 100px;
+	background-position: center;
+	background-size: 100% 100%;
+	background-image: url(../imgs/npmlogo.png);
+}
+
+.logo.linux {
+	margin-top: 24px;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-image: url(../imgs/linuxlogo.png);
+}
+
+.logo.docker {
+	background-position: center;
+	margin-top: 24px;
+	background-image: url(../imgs/dockerlogo.png);
+}
+
+.logo.nginx {
+	background-position: center;
+	margin-top: 24px;
+	background-image: url(../imgs/nginxlogo.png);
+}
+
+.logo.jquery {
+	background-image: url(../imgs/jquerylogo.png);
+}
+
+.logo.webpack {
+	margin-top: 24px;
+	background-image: url(../imgs/webpack.svg);
+	background-size: 100%;
+	background-position: center;
+}
+
+.logo.amap {
+	margin-top: 24px;
+	background-image: url(../imgs/amap.png);
+}
+
+.logo.chartjs {
+	margin-top: 24px;
+	background-image: url(../imgs/chartjs.svg);
+}
+
+.logo.bootstrap {
+	background-position: center;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-image: url(../imgs/bootlogo.png);
+}
+
+.techs {
+	padding-left: 50px;
+}
+
