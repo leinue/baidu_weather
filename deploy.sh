@@ -1,7 +1,7 @@
 rm -rf ./build/*
 gulp build
 mkdir ./build/weapp/
-npm run build
+cd weapp && npm run build && cd ../
 cp -r ./weapp/dist build/weapp/dist
 mv build/weapp/dist/static ./build
 git add .
