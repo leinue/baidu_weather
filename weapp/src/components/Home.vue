@@ -29,7 +29,7 @@
       <div class="weather-header">
         <h2>{{weatherInfo.city}}</h2>
         <h3>{{weatherInfo.weather}}</h3>
-        <h1>{{weatherInfo.degree}} ℃</h1>
+        <h1>{{weatherInfo.temperature}} ℃</h1>
       </div>
 
       <div class="weather-content">
@@ -39,7 +39,7 @@
               今天 <span class="sub-title">未来三小时</span>
             </div>
             <div class="grid-cell" style="text-align:right">
-              <span style="margin-right:10px">28</span> <span class="sub-title">20</span>
+              <span style="margin-right:10px">{{weatherInfo.windDirection}} 风</span> <span class="sub-title">{{weatherInfo.windPower}} 级</span>
             </div>
           </div>
         </div>
@@ -47,22 +47,22 @@
           <div class="grid">
             <div class="grid-cell">
               <p>现在</p>
-              <div>ss</div>
-              <p>23</p>
+              <span class="weather">{{weatherInfo.weather}}</span>
+              <p>{{weatherInfo.temperature}}</p>
             </div>
             <div class="grid-cell">
               <p>12时</p>
-              <div>ss</div>
+              <span class="weather">{{weatherInfo.weather}}</span>
               <p>23</p>              
             </div>
             <div class="grid-cell">
               <p>13时</p>
-              <div>ss</div>
+              <span class="weather">{{weatherInfo.weather}}</span>
               <p>23</p>              
             </div>
             <div class="grid-cell">
               <p>14时</p>
-              <div>ss</div>
+              <span class="weather">{{weatherInfo.weather}}</span>
               <p>23</p>              
             </div>
           </div>
@@ -74,6 +74,7 @@
           未来5天气温变化情况
         </div>
         <canvas style="margin-top:10px" id="myChart" width="400" height="400"></canvas>
+        <div style="display:none" id="map-container"></div>
       </div>
     </div>
 
@@ -84,7 +85,6 @@
 import { Group, Cell } from 'vux'
 import { Loading, XSwitch, XButton, TransferDomDirective as TransferDom } from 'vux'
 import { Popup, Scroller, Toast, XAddress, ChinaAddressData } from 'vux'
-
 import Chart from 'chart.js';
 
 export default {
@@ -107,54 +107,25 @@ export default {
   },
 
   mounted () {
-    // this.getLocation();
-    Chart.defaults.global.defaultColor = '#fff';
-    Chart.defaults.global.defaultFontColor = '#fff';
-    Chart.defaults.global.defaultFontFamily = '"Avenir", Helvetica, Arial, sans-serif';
-    Chart.defaults.global.elements.line.borderColor = '#fff';
-    Chart.defaults.global.elements.line.borderWidth = 2;    
-    Chart.defaults.global.elements.point.borderColor = '#fff';
-    Chart.defaults.global.elements.point.backgroundColor = '#fff';
-    Chart.defaults.global.elements.point.radius = 2;    
+    this.getLocation();
+    this.initChartOptions();
 
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var data = {
-      labels : ["23日","24日","25日","26日","27日"],
-      datasets : [
-        {
-          fillColor : "rgba(220,220,220,0.5)",
-          strokeColor : "#ff3dff",
-          backgroundColor: 'rgba(75,192,192,0.4)',
-          pointColor : "#ffffff",
-          pointStrokeColor : "#ffffff",
-          data : [65,59,90,81,56,55,40],
-          label: '23日'
-        },
-        {
-          fillColor : "rgba(151,187,205,0.5)",
-          strokeColor : "#ffffff",
-          backgroundColor: 'rgba(75,192,192,0.1)',
-          pointColor : "#ffffff",
-          pointStrokeColor : "#ffffff",
-          data : [28,48,40,19,96,27,100],
-          label: '24日'
-        }
-      ]
-    };
+    var futureWeatherData = this.futureWeatherData,
+        ctx = document.getElementById("myChart").getContext("2d"),
 
-    var myNewChart = new Chart(ctx, {
-      type: 'line',
-      data: data
-    }, {
-      scaleLineColor: 'rgba(255, 255, 255,.1)',
-      scaleFontColor : "#fff",
-      scaleGridLineColor : "rgba(255, 255, 255,.1)"
-    });
+        futureWeatherDataLineChart = new Chart(ctx, {
+          type: 'line',
+          data: futureWeatherData
+        }, {
+          scaleLineColor: 'rgba(255, 255, 255,.1)',
+          scaleFontColor : "#fff",
+          scaleGridLineColor : "rgba(255, 255, 255,.1)"
+        });
   },
 
   data () {
     return {
-      isLoadLocation: false,
+      isLoadLocation: true,
       showTip: false,      
       tips: '抱歉，无法获取您的位置信息，请手动选择',
       locaionLoadingText: '获取位置信息...',
@@ -166,8 +137,36 @@ export default {
       weatherInfo: {
         city: '--',
         weather: '--',
-        degree: '--'
-      }
+        temperature: '--',
+        windDirection: '--',
+        windPower: '--'
+      },
+
+      futureWeatherData: {
+        labels : ["23日","24日","25日","26日","27日"],
+        datasets : [
+          {
+            fillColor : "rgba(220,220,220,0.5)",
+            strokeColor : "#ff3dff",
+            backgroundColor: 'rgba(75,192,192,0.4)',
+            pointColor : "#ffffff",
+            pointStrokeColor : "#ffffff",
+            data : [65,59,90,81,56,55,40],
+            label: '23日'
+          },
+          {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "#ffffff",
+            backgroundColor: 'rgba(75,192,192,0.1)',
+            pointColor : "#ffffff",
+            pointStrokeColor : "#ffffff",
+            data : [28,48,40,19,96,27,100],
+            label: '24日'
+          }
+        ]
+      },
+
+      position: {}
     }
   },
 
@@ -183,6 +182,17 @@ export default {
 
   methods: {
 
+    initChartOptions () {
+      Chart.defaults.global.defaultColor = '#fff';
+      Chart.defaults.global.defaultFontColor = '#fff';
+      Chart.defaults.global.defaultFontFamily = '"Avenir", Helvetica, Arial, sans-serif';
+      Chart.defaults.global.elements.line.borderColor = '#fff';
+      Chart.defaults.global.elements.line.borderWidth = 2;    
+      Chart.defaults.global.elements.point.borderColor = '#fff';
+      Chart.defaults.global.elements.point.backgroundColor = '#fff';
+      Chart.defaults.global.elements.point.radius = 2;
+    },
+
     getLocation () {
 
       var self = this;
@@ -190,9 +200,11 @@ export default {
       if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           console.log(position);
+          self.position = position;
           self.tips = '获取位置信息成功，正在获取天气数据';
           self.showTip = true;
           self.locaionLoadingText = '获取天气数据...';
+          self.initMap();
         });
       }else {
         this.showTip = true;
@@ -200,6 +212,61 @@ export default {
         this.tips = '抱歉，无法获取您的位置信息，请手动选择';
         this.showAddressSelector = true;
       }
+
+    },
+
+    initMap () {
+      var self = this,
+
+      map = new AMap.Map('map-container', {
+          resizeEnable: true,
+          center: [self.position.coords.longitude, self.position.coords.latitude],
+          zoom: 12
+      });
+
+      this.getFutureWeatherData(map);
+    },
+
+    getFutureWeatherData (map) {
+
+      var self = this;
+
+      AMap.service('AMap.Weather', function() {
+          var weather = new AMap.Weather();
+          weather.getLive('朝阳区', function(err, data) {
+              if (!err) {
+                  self.tips = '获取天气信息成功 :)';
+                  self.isLoadLocation = false;
+
+                  self.weatherInfo.city = data.city;
+                  self.weatherInfo.weather = data.weather;
+                  self.weatherInfo.temperature = data.temperature;
+                  self.weatherInfo.windDirection = data.windDirection;
+                  self.weatherInfo.windPower = data.windPower;
+
+                  console.log(data);
+              }else {
+                  self.tips = '获取天气信息失败，请重试 :(';
+              }
+          });
+          //未来4天天气预报
+          weather.getForecast('朝阳区', function(err, data) {
+              if(err) {
+                self.tips = '获取天气信息失败，请重试 :(';
+                return;
+              }
+              var str = [];
+              for (var i = 0,dayWeather; i < data.forecasts.length; i++) {
+                  dayWeather = data.forecasts[i];
+                  str.push(dayWeather.date+' <div class="weather">'+dayWeather.dayWeather+'</div> '+ dayWeather.nightTemp + '~' + dayWeather.dayTemp + '℃');
+              }
+              console.log(str.join('<br>'));
+          });
+      });
+
+    },
+
+    getAddressByCoords () {
 
     }
 
@@ -307,6 +374,10 @@ h1,h2,h3,h4,h5,h6 {
   z-index: -1;
   width: 100%;
   height: calc(100vh + 180px);
+}
+
+.weather {
+  font-size: .8em;
 }
 
 </style>
