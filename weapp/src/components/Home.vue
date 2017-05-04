@@ -13,7 +13,7 @@
 
     <div v-transfer-dom>
       <popup v-model="showAddressSelector" height="100%">
-        <div class="popup1">
+        <div class="addrSelectorPopup">
           <group>
             <x-address :title="addrSelectorTitle" v-model="addrSelectorVal" raw-value :list="addressData" value-text-align="left"></x-address>
           </group>
@@ -385,7 +385,7 @@ h1,h2,h3,h4,h5,h6 {
   height:200px;
 }
 
-.popup1 {
+.addrSelectorPopup {
   width:100%;
   height:100%;
 }

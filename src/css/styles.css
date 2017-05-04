@@ -9,7 +9,7 @@ body {
 	width: 100%;
 }
 
-button {
+button, .btn {
 	display: inline-block;
     color: #26a2ff;
     padding: 10px;
@@ -20,11 +20,17 @@ button {
     background: transparent;
     transition: 0.3s;
     cursor: pointer;
+    text-align: center;
 }
 
-button:hover {
+button:hover, .btn:hover {
 	color: #fff;
 	background-color: #26a2ff;
+}
+
+.btn:after {
+	height: 0px;
+	background: #26a2ff;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -32,7 +38,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 a {
-  	color: #313538;
+  	color: #26a2ff;
 	position: relative;
   	-webkit-transition: 0.3s;
   	-o-transition: 0.3s;
@@ -43,6 +49,7 @@ a {
   	*display: inline;
   	font-weight: 100;
   	padding: 10px;
+  	padding-left: 14px;
   	text-decoration: none;
   	cursor: pointer;
 }
@@ -55,7 +62,7 @@ a:after {
   	width: 100%;
   	z-index: -1;
   	content: "";
-  	background: #313538;
+  	background: #26a2ff;
   	-webkit-transition: 0.3s;
   	-o-transition: 0.3s;
   	transition: 0.3s;
@@ -232,6 +239,23 @@ a:hover:after, a:active:after, a:focus:after {
 
 .logo.jquery {
 	background-image: url(../imgs/jquerylogo.png);
+}
+
+.logo.webpack {
+	margin-top: 24px;
+	background-image: url(../imgs/webpack.svg);
+	background-size: 100%;
+	background-position: center;
+}
+
+.logo.amap {
+	margin-top: 24px;
+	background-image: url(../imgs/amap.png);
+}
+
+.logo.chartjs {
+	margin-top: 24px;
+	background-image: url(../imgs/chartjs.svg);
 }
 
 .logo.bootstrap {

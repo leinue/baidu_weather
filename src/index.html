@@ -47,23 +47,35 @@
 
 								<div class="grid" style="margin-top:10px;">
 									<div class="grid-cell">
+										<div class="logo npm"></div>
+									</div>								
+									<div class="grid-cell">
 										<div class="logo gulp"></div>
 									</div>
 									<div class="grid-cell">
-										<div class="logo npm"></div>
+										<div class="logo webpack"></div>
 									</div>
 									<div class="grid-cell">
-										<div class="logo git"></div>
-									</div>	
+										<div class="logo amap"></div>
+									</div>
+									<div class="grid-cell">
+										<div class="logo chartjs"></div>
+									</div>									
+								</div>
+
+								<div class="grid" style="margin-top:10px;">
 									<div class="grid-cell">
 										<div class="logo linux"></div>
-									</div>
+									</div>								
 									<div class="grid-cell">
 										<div class="logo docker"></div>
 									</div>
 									<div class="grid-cell">
 										<div class="logo nginx"></div>
-									</div>
+									</div>									
+									<div class="grid-cell">
+										<div class="logo git"></div>
+									</div>	
 								</div>
 
 							</div>
@@ -73,10 +85,10 @@
 						<div class="info-footer">
 							<div class="grid">
 								<div class="grid-cell" style="margin-right: 15px;text-align:right">
-									<button onclick="window.location='https://github.com/leinue/baidu_weather'">Github</button>	
+									<a class="btn" target="_blank" href="https://github.com/leinue/baidu_weather">Github</a>	
 								</div>
 								<div class="grid-cell" style="text-align:left">
-									<button onclick="window.location='http://ivydom.com'">My Blog</button>
+									<a class="btn" target="_blank" href="http://ivydom.com">My Blog</a>
 								</div>
 							</div>							
 						</div>
@@ -87,13 +99,26 @@
 			<div class="grid-cell">
 				<div class="center-area">
 					<div class="phone-frame">
-						<iframe src="http://localhost:4000"></iframe>
+						<iframe id="weather" src=""></iframe>
 					</div>
 				</div>
 			</div>
 		</div>
 
 	</section>
+
+	<script type="text/javascript">
+		
+		var src = "http://weather.poimoe.com";
+
+		if(document.domain == 'localhost') {
+			src = 'http://localhost:4000';
+		}
+
+		var weatherFrame = document.getElementById('weather');
+		weatherFrame.src = src;
+
+	</script>
 
 </body>
 </html>
