@@ -192,7 +192,8 @@ export default {
 
       var self = this;
 
-      if(navigator.geolocation) {
+      if(navigator.geolocation && document.domain == 'localhost') {
+        //如果支持geolocation api 且本地运行，直接调用api
         navigator.geolocation.getCurrentPosition(function(position) {
           self.position = position;
           self.reqStatus = 'success';

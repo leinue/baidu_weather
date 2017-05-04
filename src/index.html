@@ -110,14 +110,33 @@
 
 	<script type="text/javascript">
 		
-		var src = "http://weather.poimoe.com/weapp/dist";
-
-		if(document.domain == 'localhost') {
-			src = 'http://localhost:4000';
+		function IsPC() {
+		    var userAgentInfo = navigator.userAgent;
+		    var Agents = ["Android", "iPhone",
+		                "SymbianOS", "Windows Phone",
+		                "iPad", "iPod"];
+		    var flag = true;
+		    for (var v = 0; v < Agents.length; v++) {
+		        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+		            flag = false;
+		            break;
+		        }
+		    }
+		    return flag;
 		}
 
-		var weatherFrame = document.getElementById('weather');
-		weatherFrame.src = src;
+		if(IsPC) {
+			var src = "http://weather.poimoe.com/weapp/dist";
+
+			if(document.domain == 'localhost') {
+				src = 'http://localhost:4000';
+			}
+
+			var weatherFrame = document.getElementById('weather');
+			weatherFrame.src = src;
+		}else {
+			window.location.href = 'http://weather.poimoe.com/weapp/dist';
+		}
 
 	</script>
 
