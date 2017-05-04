@@ -459,7 +459,8 @@ h1,h2,h3,h4,h5,h6 {
   position: fixed;
   z-index: -1;
   width: 100%;
-  height: calc(100vh + 180px);
+  height: 100vh;
+  padding-bottom: 30px;
 }
 
 .weather {
