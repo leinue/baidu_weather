@@ -36,7 +36,7 @@
         <div class="content-header">
           <div class="grid">
             <div class="grid-cell">
-              今天 <span class="sub-title">未来三小时</span>
+              五天 <span class="sub-title">气温情况</span>
             </div>
             <div class="grid-cell" style="text-align:right">
               <span style="margin-right:10px">{{weatherInfo.windDirection}} 风</span> <span class="sub-title">{{weatherInfo.windPower}} 级</span>
@@ -46,24 +46,14 @@
         <div class="content-footer">
           <div class="grid">
             <div class="grid-cell">
-              <p>现在</p>
+              <p>今天</p>
               <span class="weather">{{weatherInfo.weather}}</span>
               <p>{{weatherInfo.temperature}}</p>
             </div>
-            <div class="grid-cell">
-              <p>12时</p>
-              <span class="weather">{{weatherInfo.weather}}</span>
-              <p>23</p>              
-            </div>
-            <div class="grid-cell">
-              <p>13时</p>
-              <span class="weather">{{weatherInfo.weather}}</span>
-              <p>23</p>              
-            </div>
-            <div class="grid-cell">
-              <p>14时</p>
-              <span class="weather">{{weatherInfo.weather}}</span>
-              <p>23</p>              
+            <div class="grid-cell" v-for="dayTemp in weatherForecasts">
+              <p>{{dayTemp.week | weekFilter}}</p>
+              <span class="weather">{{dayTemp.dayWeather}}</span>
+              <p>{{dayTemp.dayTemp}}</p>              
             </div>
           </div>
         </div>
@@ -71,7 +61,7 @@
 
       <div class="weather-footer">
         <div class="content-header">
-          未来5天气温变化情况
+          五天 <span class="sub-title">气温情况统计图</span>
         </div>
         <canvas style="margin-top:10px" id="myChart" width="400" height="400"></canvas>
         <div style="display:none" id="map-container"></div>
@@ -82,10 +72,27 @@
 </template>
 
 <script>
+
+import Vue from 'vue';
 import { Group, Cell } from 'vux'
 import { Loading, XSwitch, XButton, TransferDomDirective as TransferDom } from 'vux'
 import { Popup, Scroller, Toast, XAddress, ChinaAddressData } from 'vux'
 import Chart from 'chart.js';
+
+Vue.filter('weekFilter', function(value) {
+
+  var weekFilter = {
+    1: '一',
+    2: '二',
+    3: '三',
+    4: '四',
+    5: '五',
+    6: '六',
+    7: '日'
+  }
+
+  return '周' + weekFilter[value];
+});
 
 export default {
   components: {
@@ -141,6 +148,8 @@ export default {
         windDirection: '--',
         windPower: '--'
       },
+
+      weatherForecasts: [],
 
       futureWeatherData: {
         labels : ["23日","24日","25日","26日","27日"],
@@ -243,8 +252,6 @@ export default {
                   self.weatherInfo.temperature = data.temperature;
                   self.weatherInfo.windDirection = data.windDirection;
                   self.weatherInfo.windPower = data.windPower;
-
-                  console.log(data);
               }else {
                   self.tips = '获取天气信息失败，请重试 :(';
               }
@@ -255,12 +262,14 @@ export default {
                 self.tips = '获取天气信息失败，请重试 :(';
                 return;
               }
-              var str = [];
+
+              self.weatherForecasts = data.forecasts;
+
               for (var i = 0,dayWeather; i < data.forecasts.length; i++) {
                   dayWeather = data.forecasts[i];
-                  str.push(dayWeather.date+' <div class="weather">'+dayWeather.dayWeather+'</div> '+ dayWeather.nightTemp + '~' + dayWeather.dayTemp + '℃');
+                  console.log(dayWeather);
+                  // str.push(dayWeather.date+' <div class="weather">'+dayWeather.dayWeather+'</div> '+ dayWeather.nightTemp + '~' + dayWeather.dayTemp + '℃');
               }
-              console.log(str.join('<br>'));
           });
       });
 
