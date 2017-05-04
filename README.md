@@ -12,7 +12,8 @@ Designed and Developed By 谢扬
 
 ＃ 目录说明
 
-1.src目录下为
+1.src目录下为托管app的页面（为了在PC上访问方便）
+2.weapp目录下为天气APP程序
 
 # 运行说明
 
