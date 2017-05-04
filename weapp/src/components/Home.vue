@@ -3,24 +3,23 @@
 
     <iframe class="bg" src="static/line/index.html"></iframe>
 
+    <div class="repos" @click="showAddrSelector"></div>
+
     <div v-transfer-dom>
       <loading v-model="isLoadLocation" :text="locaionLoadingText"></loading>
     </div>
 
-    <div v-transfer-dom>
-      <popup v-model="showTip" position="top" :show-mask="false">
-        <div class="position-vertical-demo">
-        {{tips}}
-        </div>
-      </popup>
-    </div>
+    <toast v-model="showTip" :type="reqStatus">{{tips}}</toast>
 
     <div v-transfer-dom>
-      <popup v-model="showAddressSelector" height="50%">
+      <popup v-model="showAddressSelector" height="100%">
         <div class="popup1">
           <group>
-            <x-address title="位置信息" v-model="userAddress" :list="addressData" placeholder="请选择地址" inline-desc="请选择地址"></x-address>
+            <x-address :title="addrSelectorTitle" v-model="addrSelectorVal" raw-value :list="addressData" value-text-align="left"></x-address>
           </group>
+          <div style="padding: 15px 15px;">
+            <x-button type="primary" @click.native="applyThisCity">确定</x-button>
+          </div>
         </div>
       </popup>
     </div>
@@ -64,7 +63,6 @@
           五天 <span class="sub-title">气温情况统计图</span>
         </div>
         <canvas style="margin-top:10px" id="myChart" width="400" height="400"></canvas>
-        <div style="display:none" id="map-container"></div>
       </div>
     </div>
 
@@ -123,11 +121,14 @@ export default {
       isLoadLocation: true,
       showTip: false,      
       tips: '抱歉，无法获取您的位置信息，请手动选择',
+      reqStatus: 'success',
       locaionLoadingText: '获取经纬度中...',
 
       addressData: ChinaAddressData,
       showAddressSelector: false,
       userAddress: [],
+      addrSelectorTitle: '选择城市',
+      addrSelectorVal: ['北京市', '市辖区', '朝阳区'],
 
       weatherInfo: {
         city: '--',
@@ -152,7 +153,9 @@ export default {
         }]
       },
 
-      position: {}
+      position: {},
+
+      map: {}
     }
   },
 
@@ -161,12 +164,18 @@ export default {
       if (val) {
         setTimeout(() => {
           this.showTip = false
-        }, 1500)
+        }, 2000)
       }
     }
   },
 
   methods: {
+
+    applyThisCity () {
+        this.weatherInfo.city = this.addrSelectorVal[this.addrSelectorVal.length - 1];
+        this.showAddressSelector = false;
+        this.getFutureWeatherData(true);
+    },
 
     initChartOptions () {
       Chart.defaults.global.defaultColor = '#fff';
@@ -185,9 +194,9 @@ export default {
 
       if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-          console.log(position);
           self.position = position;
-          self.tips = '获取经纬度成功，正在获取城市数据';
+          self.reqStatus = 'success';
+          self.tips = '获取城市数据...';
           self.showTip = true;
           self.locaionLoadingText = '获取城市数据...';
           self.initMap();
@@ -195,22 +204,15 @@ export default {
       }else {
         this.showTip = true;
         this.isLoadLocation = false;
-        this.tips = '抱歉，无法获取您的位置信息，请手动选择';
+        this.tips = '无法获取位置信息，请手动选择';
+        self.reqStatus = 'cancel';
         this.showAddressSelector = true;
       }
 
     },
 
     initMap () {
-      var self = this,
-
-      map = new AMap.Map('map-container', {
-          resizeEnable: true,
-          center: [self.position.coords.longitude, self.position.coords.latitude],
-          zoom: 12
-      });
-
-      this.getFutureWeatherData(map);
+      this.getFutureWeatherData();
     },
 
     initLineChart () {
@@ -229,7 +231,9 @@ export default {
 
     },
 
-    getFutureWeatherData (map) {
+    getFutureWeatherData (getByCity) {
+
+      getByCity = getByCity || false;
 
       var self = this;
 
@@ -237,12 +241,11 @@ export default {
           var weather = new AMap.Weather(),
 
             getLiveWeather = function(address) {
-
-              console.log(address);
-
-              weather.getLive(address, function(err, data) {
+              self.weatherInfo.city = address;
+              weather.getLive(self.weatherInfo.city, function(err, data) {
                   if (!err) {
-                      self.tips = '获取天气信息成功 :)';
+                      self.tips = '获取成功 :)';
+                      self.reqStatus = 'success';
                       self.isLoadLocation = false;
 
                       self.weatherInfo.city = data.city;
@@ -254,12 +257,14 @@ export default {
                       self.futureWeatherData.labels[0] = '今天';
                       self.futureWeatherData.datasets[0].data[0] = self.weatherInfo.temperature;
 
-                      weather.getForecast(data.city, function(err, data) {
+                      weather.getForecast(self.weatherInfo.city, function(err, data) {
                           if(err) {
-                            self.tips = '获取天气预报信息失败，请重试 :(';
+                            self.tips = '获取失败，请重试 :(';
+                            self.reqStatus = 'cancel';
                             return;
                           }
 
+                          self.reqStatus = 'success';
                           self.weatherForecasts = data.forecasts;
 
                           for (var i = 0, dayWeather; i < data.forecasts.length; i++) {
@@ -275,16 +280,25 @@ export default {
                       });
 
                   }else {
-                      self.tips = '获取天气信息失败，请重试 :(';
+                      self.tips = '获取失败，请重试 :(';
+                      self.reqStatus = 'cancel';
                   }
               });
 
             };
 
-          // getLiveWeather();
-          self.getAddressByCoords([self.position.coords.longitude, self.position.coords.latitude], getLiveWeather);
+          if(getByCity) {
+            getLiveWeather(self.weatherInfo.city);
+          }else {
+            self.getAddressByCoords([self.position.coords.longitude, self.position.coords.latitude], getLiveWeather);
+          }
+
       });
 
+    },
+
+    showAddrSelector () {
+      this.showAddressSelector = true;
     },
 
     getAddressByCoords: function(lnglatXY, cb) {
@@ -295,10 +309,7 @@ export default {
             city: "010"
         });
 
-        console.log(geocoder);
-
         geocoder.getAddress(lnglatXY, function(status, result) {
-          console.log(status, result);
           if(status === 'complete' && result.info === 'OK') {
             if(cb) {
               cb(result.regeocode.addressComponent.city);
@@ -306,6 +317,7 @@ export default {
           }else{
              //获取地址失败
             self.tips = '获取地址信息失败，请重试 :(';
+            self.reqStatus = 'cancel';
           }
         });
 
@@ -421,6 +433,29 @@ h1,h2,h3,h4,h5,h6 {
 
 .weather {
   font-size: .8em;
+}
+
+.weui-label {
+  color: #000;
+}
+
+.vux-popup-picker-value {
+  color: #000!important;
+}
+
+.repos {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: 0.3s;
+  background-image: url('../assets/location.png');
+}
+
+.repos:hover {
+  transform: scale(1.2);
 }
 
 </style>
