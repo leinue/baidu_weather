@@ -192,6 +192,38 @@ export default {
 
       var self = this;
 
+      function showCityInfo(cb) {
+        //实例化城市查询类
+        var citysearch = new AMap.CitySearch();
+        //自动获取用户IP，返回当前城市
+        citysearch.getLocalCity(function(status, result) {
+            if (status === 'complete' && result.info === 'OK') {
+                if (result && result.city && result.bounds) {
+                    var cityinfo = result.city;
+                    var citybounds = result.bounds;
+                    console.log('cityinfo', cityinfo);
+                    if(cb) {
+                      cb(cityinfo);
+                    }
+                }
+            } else {
+              self.showTip = true;
+              self.isLoadLocation = false;
+              self.tips = '无法获取位置信息，请手动选择';
+              self.reqStatus = 'cancel';
+              self.showAddressSelector = true;
+            }
+        });
+      }
+
+      var handleError = function() {
+        //如果浏览器不支持geolocation api或用户阻止，尝试通过ip获取城市信息
+        showCityInfo(function(cityinfo) {
+          self.weatherInfo.city = cityinfo;
+          self.getFutureWeatherData(true);          
+        });
+      }
+
       if(navigator.geolocation && document.domain == 'localhost') {
         //如果支持geolocation api 且本地运行，直接调用api
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -201,13 +233,11 @@ export default {
           self.showTip = true;
           self.locaionLoadingText = '获取城市数据...';
           self.initMap();
+        }, function(error) {
+          handleError();
         });
       }else {
-        this.showTip = true;
-        this.isLoadLocation = false;
-        this.tips = '无法获取位置信息，请手动选择';
-        self.reqStatus = 'cancel';
-        this.showAddressSelector = true;
+        handleError();
       }
 
     },
