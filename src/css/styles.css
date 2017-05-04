@@ -2,6 +2,7 @@ html {
 	height: 100%;
 	background: #ecf6fb;
 	color: #313538;
+  	font-family: 'Avenir', Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -165,6 +166,11 @@ a:hover:after, a:active:after, a:focus:after {
 	width: 50px;
 	height: 50px;
 	background-size: cover;
+	transition: 0.3s;
+}
+
+.logo:hover {
+	transform: scale(1.5);
 }
 
 .logo.vuejs {
