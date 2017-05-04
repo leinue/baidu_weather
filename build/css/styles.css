@@ -269,3 +269,7 @@ a:hover:after, a:active:after, a:focus:after {
 	padding-left: 50px;
 }
 
+a[title='站长统计'] {
+	display: none;
+}
+
