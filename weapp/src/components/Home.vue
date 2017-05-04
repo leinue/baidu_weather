@@ -1,6 +1,8 @@
 <template>
   <div>
 
+    <iframe class="bg" src="static/line/index.html"></iframe>
+
     <div v-transfer-dom>
       <loading v-model="isLoadLocation" :text="locaionLoadingText"></loading>
     </div>
@@ -70,6 +72,7 @@
       <div class="weather-footer">
         <div class="content-header">
           未来5天气温变化情况
+          <line-chart></line-chart>
         </div>
       </div>
     </div>
@@ -94,7 +97,7 @@ export default {
     Toast,
     XAddress,
     XButton,
-    Popup
+    Popup,
   },
 
   directives: {
@@ -163,6 +166,10 @@ export default {
 
 <style>
 
+body {
+  color: #ffffff;
+}
+
 h1,h2,h3,h4,h5,h6 {
   font-weight: 200;
 }
@@ -191,12 +198,11 @@ h1,h2,h3,h4,h5,h6 {
 
 .sub-title {
   color: #d0cfd0;
-  text-shadow: 2px 2px 1px #ffffff;
 }
 
 .content-footer {
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
   max-height: 80px;
   height: 80px;
   margin-top: 5px;
@@ -249,6 +255,14 @@ h1,h2,h3,h4,h5,h6 {
 
 .grid-cell {
   flex: 1;
+}
+
+.bg {
+  border: 0px;
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
 }
 
 </style>
