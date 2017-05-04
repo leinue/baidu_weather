@@ -116,18 +116,6 @@ export default {
   mounted () {
     this.getLocation();
     this.initChartOptions();
-
-    var futureWeatherData = this.futureWeatherData,
-        ctx = document.getElementById("myChart").getContext("2d"),
-
-        futureWeatherDataLineChart = new Chart(ctx, {
-          type: 'line',
-          data: futureWeatherData
-        }, {
-          scaleLineColor: 'rgba(255, 255, 255,.1)',
-          scaleFontColor : "#fff",
-          scaleGridLineColor : "rgba(255, 255, 255,.1)"
-        });
   },
 
   data () {
@@ -135,11 +123,11 @@ export default {
       isLoadLocation: true,
       showTip: false,      
       tips: '抱歉，无法获取您的位置信息，请手动选择',
-      locaionLoadingText: '获取位置信息...',
+      locaionLoadingText: '获取经纬度中...',
 
       addressData: ChinaAddressData,
       showAddressSelector: false,
-      userAddress: '',
+      userAddress: [],
 
       weatherInfo: {
         city: '--',
@@ -152,27 +140,16 @@ export default {
       weatherForecasts: [],
 
       futureWeatherData: {
-        labels : ["23日","24日","25日","26日","27日"],
-        datasets : [
-          {
-            fillColor : "rgba(220,220,220,0.5)",
-            strokeColor : "#ff3dff",
-            backgroundColor: 'rgba(75,192,192,0.4)',
-            pointColor : "#ffffff",
-            pointStrokeColor : "#ffffff",
-            data : [65,59,90,81,56,55,40],
-            label: '23日'
-          },
-          {
-            fillColor : "rgba(151,187,205,0.5)",
-            strokeColor : "#ffffff",
-            backgroundColor: 'rgba(75,192,192,0.1)',
-            pointColor : "#ffffff",
-            pointStrokeColor : "#ffffff",
-            data : [28,48,40,19,96,27,100],
-            label: '24日'
-          }
-        ]
+        labels: ["今天", "-", "-", "-", "-"],
+        datasets: [{
+          fillColor: "rgba(220,220,220,0.5)",
+          strokeColor: "#ff3dff",
+          backgroundColor: 'rgba(75,192,192,0.4)',
+          pointColor: "#ffffff",
+          pointStrokeColor: "#ffffff",
+          data: [0, 0, 0, 0, 0],
+          label: '气温'
+        }]
       },
 
       position: {}
@@ -210,9 +187,9 @@ export default {
         navigator.geolocation.getCurrentPosition(function(position) {
           console.log(position);
           self.position = position;
-          self.tips = '获取位置信息成功，正在获取天气数据';
+          self.tips = '获取经纬度成功，正在获取城市数据';
           self.showTip = true;
-          self.locaionLoadingText = '获取天气数据...';
+          self.locaionLoadingText = '获取城市数据...';
           self.initMap();
         });
       }else {
@@ -236,46 +213,103 @@ export default {
       this.getFutureWeatherData(map);
     },
 
+    initLineChart () {
+
+      var futureWeatherData = this.futureWeatherData,
+          ctx = document.getElementById("myChart").getContext("2d"),
+
+          futureWeatherDataLineChart = new Chart(ctx, {
+            type: 'line',
+            data: futureWeatherData
+          }, {
+            scaleLineColor: 'rgba(255, 255, 255,.1)',
+            scaleFontColor : "#fff",
+            scaleGridLineColor : "rgba(255, 255, 255,.1)"
+          });
+
+    },
+
     getFutureWeatherData (map) {
 
       var self = this;
 
       AMap.service('AMap.Weather', function() {
-          var weather = new AMap.Weather();
-          weather.getLive('朝阳区', function(err, data) {
-              if (!err) {
-                  self.tips = '获取天气信息成功 :)';
-                  self.isLoadLocation = false;
+          var weather = new AMap.Weather(),
 
-                  self.weatherInfo.city = data.city;
-                  self.weatherInfo.weather = data.weather;
-                  self.weatherInfo.temperature = data.temperature;
-                  self.weatherInfo.windDirection = data.windDirection;
-                  self.weatherInfo.windPower = data.windPower;
-              }else {
-                  self.tips = '获取天气信息失败，请重试 :(';
-              }
-          });
-          //未来4天天气预报
-          weather.getForecast('朝阳区', function(err, data) {
-              if(err) {
-                self.tips = '获取天气信息失败，请重试 :(';
-                return;
-              }
+            getLiveWeather = function(address) {
 
-              self.weatherForecasts = data.forecasts;
+              console.log(address);
 
-              for (var i = 0,dayWeather; i < data.forecasts.length; i++) {
-                  dayWeather = data.forecasts[i];
-                  console.log(dayWeather);
-                  // str.push(dayWeather.date+' <div class="weather">'+dayWeather.dayWeather+'</div> '+ dayWeather.nightTemp + '~' + dayWeather.dayTemp + '℃');
-              }
-          });
+              weather.getLive(address, function(err, data) {
+                  if (!err) {
+                      self.tips = '获取天气信息成功 :)';
+                      self.isLoadLocation = false;
+
+                      self.weatherInfo.city = data.city;
+                      self.weatherInfo.weather = data.weather;
+                      self.weatherInfo.temperature = data.temperature;
+                      self.weatherInfo.windDirection = data.windDirection;
+                      self.weatherInfo.windPower = data.windPower;
+
+                      self.futureWeatherData.labels[0] = '今天';
+                      self.futureWeatherData.datasets[0].data[0] = self.weatherInfo.temperature;
+
+                      weather.getForecast(data.city, function(err, data) {
+                          if(err) {
+                            self.tips = '获取天气预报信息失败，请重试 :(';
+                            return;
+                          }
+
+                          self.weatherForecasts = data.forecasts;
+
+                          for (var i = 0, dayWeather; i < data.forecasts.length; i++) {
+                              dayWeather = data.forecasts[i];
+                              console.log(dayWeather);
+                              self.futureWeatherData.labels[i + 1] = dayWeather.week;
+                              self.futureWeatherData.datasets[0].data[i + 1] = dayWeather.dayTemp;
+                          }
+
+                          self.initLineChart();
+
+                          console.log(self.futureWeatherData);
+                      });
+
+                  }else {
+                      self.tips = '获取天气信息失败，请重试 :(';
+                  }
+              });
+
+            };
+
+          // getLiveWeather();
+          self.getAddressByCoords([self.position.coords.longitude, self.position.coords.latitude], getLiveWeather);
       });
 
     },
 
-    getAddressByCoords () {
+    getAddressByCoords: function(lnglatXY, cb) {
+
+      AMap.plugin('AMap.Geocoder', function(){
+        //实例化Geocoder
+        var geocoder = new AMap.Geocoder({
+            city: "010"
+        });
+
+        console.log(geocoder);
+
+        geocoder.getAddress(lnglatXY, function(status, result) {
+          console.log(status, result);
+          if(status === 'complete' && result.info === 'OK') {
+            if(cb) {
+              cb(result.regeocode.addressComponent.city);
+            }
+          }else{
+             //获取地址失败
+            self.tips = '获取地址信息失败，请重试 :(';
+          }
+        });
+
+      });
 
     }
 
