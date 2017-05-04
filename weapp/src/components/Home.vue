@@ -456,7 +456,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .bg {
   border: 0px;
-  position: absolute;
+  position: fixed;
   z-index: -1;
   width: 100%;
   height: calc(100vh + 180px);
