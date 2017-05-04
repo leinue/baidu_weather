@@ -19,6 +19,7 @@
           </group>
           <div style="padding: 15px 15px;">
             <x-button type="primary" @click.native="applyThisCity">确定</x-button>
+            <x-button type="warn" @click.native="showAddressSelector = false">取消</x-button>
           </div>
         </div>
       </popup>
