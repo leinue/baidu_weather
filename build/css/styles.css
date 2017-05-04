@@ -148,6 +148,7 @@ a:hover:after, a:active:after, a:focus:after {
 
 .info-content {
 	text-align: center;
+	padding-top: 30px;
 }
 
 .tech-list {
@@ -171,6 +172,7 @@ a:hover:after, a:active:after, a:focus:after {
 }
 
 .logo.git {
+	margin-top: 24px;
 	background-image: url(../imgs/gitlogo.png);
 }
 
@@ -227,9 +229,13 @@ a:hover:after, a:active:after, a:focus:after {
 }
 
 .logo.bootstrap {
+	background-position: center;
+	background-size: 100%;
+	background-repeat: no-repeat;
 	background-image: url(../imgs/bootlogo.png);
 }
 
-
-
+.techs {
+	padding-left: 50px;
+}
 
