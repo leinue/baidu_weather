@@ -17,15 +17,63 @@
       <popup v-model="showAddressSelector" height="50%">
         <div class="popup1">
           <group>
-            <x-address title="位置信息" v-model="showAddressSelector" :list="addressData" placeholder="请选择地址" inline-desc="请选择地址"></x-address>
+            <x-address title="位置信息" v-model="userAddress" :list="addressData" placeholder="请选择地址" inline-desc="请选择地址"></x-address>
           </group>
         </div>
       </popup>
     </div>
 
-    <group title="cell demo">
-      <cell title="Vux" value="Cool" is-link></cell>
-    </group>
+    <div class="weather-content">
+      <div class="weather-header">
+        <h2>{{weatherInfo.city}}</h2>
+        <h3>{{weatherInfo.weather}}</h3>
+        <h1>{{weatherInfo.degree}} ℃</h1>
+      </div>
+
+      <div class="weather-content">
+        <div class="content-header">
+          <div class="grid">
+            <div class="grid-cell">
+              今天 <span class="sub-title">未来三小时</span>
+            </div>
+            <div class="grid-cell" style="text-align:right">
+              <span style="margin-right:10px">28</span> <span class="sub-title">20</span>
+            </div>
+          </div>
+        </div>
+        <div class="content-footer">
+          <div class="grid">
+            <div class="grid-cell">
+              <p>现在</p>
+              <div>ss</div>
+              <p>23</p>
+            </div>
+            <div class="grid-cell">
+              <p>12时</p>
+              <div>ss</div>
+              <p>23</p>              
+            </div>
+            <div class="grid-cell">
+              <p>13时</p>
+              <div>ss</div>
+              <p>23</p>              
+            </div>
+            <div class="grid-cell">
+              <p>14时</p>
+              <div>ss</div>
+              <p>23</p>              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="weather-footer">
+        <div class="content-header">
+          未来5天气温变化情况
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -65,7 +113,14 @@ export default {
       locaionLoadingText: '获取位置信息...',
 
       addressData: ChinaAddressData,
-      showAddressSelector: false
+      showAddressSelector: false,
+      userAddress: '',
+
+      weatherInfo: {
+        city: '--',
+        weather: '--',
+        degree: '--'
+      }
     }
   },
 
@@ -85,7 +140,7 @@ export default {
 
       var self = this;
 
-      if(!navigator.geolocation) {
+      if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           console.log(position);
           self.tips = '获取位置信息成功，正在获取天气数据';
@@ -107,6 +162,51 @@ export default {
 </script>
 
 <style>
+
+h1,h2,h3,h4,h5,h6 {
+  font-weight: 200;
+}
+
+.weather-header {
+  text-align: center;
+  padding: 30px;
+}
+
+.weather-header h1 {
+  font-size: 3em;
+}
+
+.weather-header h2 {
+  font-size: 1.8em;
+}
+
+.weather-header h3 {
+  font-size: 1.3em;
+}
+
+.content-header, .content-footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.sub-title {
+  color: #d0cfd0;
+  text-shadow: 2px 2px 1px #ffffff;
+}
+
+.content-footer {
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  max-height: 80px;
+  height: 80px;
+  margin-top: 5px;
+  text-align: center;
+  padding-top: 8px;
+}
+
+.weather-footer {
+  margin-top: 5px;
+}
 
 .popup0 {
   padding-bottom:15px;
@@ -141,6 +241,14 @@ export default {
   left: 50%;
   transform: translateX(-50%) translateY(-50%) scale(4);
   color: #000;
+}
+
+.grid {
+  display: flex;
+}
+
+.grid-cell {
+  flex: 1;
 }
 
 </style>
