@@ -72,8 +72,8 @@
       <div class="weather-footer">
         <div class="content-header">
           未来5天气温变化情况
-          <line-chart></line-chart>
         </div>
+        <canvas style="margin-top:10px" id="myChart" width="400" height="400"></canvas>
       </div>
     </div>
 
@@ -84,6 +84,8 @@
 import { Group, Cell } from 'vux'
 import { Loading, XSwitch, XButton, TransferDomDirective as TransferDom } from 'vux'
 import { Popup, Scroller, Toast, XAddress, ChinaAddressData } from 'vux'
+
+import Chart from 'chart.js';
 
 export default {
   components: {
@@ -105,12 +107,54 @@ export default {
   },
 
   mounted () {
-    this.getLocation();
+    // this.getLocation();
+    Chart.defaults.global.defaultColor = '#fff';
+    Chart.defaults.global.defaultFontColor = '#fff';
+    Chart.defaults.global.defaultFontFamily = '"Avenir", Helvetica, Arial, sans-serif';
+    Chart.defaults.global.elements.line.borderColor = '#fff';
+    Chart.defaults.global.elements.line.borderWidth = 2;    
+    Chart.defaults.global.elements.point.borderColor = '#fff';
+    Chart.defaults.global.elements.point.backgroundColor = '#fff';
+    Chart.defaults.global.elements.point.radius = 2;    
+
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var data = {
+      labels : ["23日","24日","25日","26日","27日"],
+      datasets : [
+        {
+          fillColor : "rgba(220,220,220,0.5)",
+          strokeColor : "#ff3dff",
+          backgroundColor: 'rgba(75,192,192,0.4)',
+          pointColor : "#ffffff",
+          pointStrokeColor : "#ffffff",
+          data : [65,59,90,81,56,55,40],
+          label: '23日'
+        },
+        {
+          fillColor : "rgba(151,187,205,0.5)",
+          strokeColor : "#ffffff",
+          backgroundColor: 'rgba(75,192,192,0.1)',
+          pointColor : "#ffffff",
+          pointStrokeColor : "#ffffff",
+          data : [28,48,40,19,96,27,100],
+          label: '24日'
+        }
+      ]
+    };
+
+    var myNewChart = new Chart(ctx, {
+      type: 'line',
+      data: data
+    }, {
+      scaleLineColor: 'rgba(255, 255, 255,.1)',
+      scaleFontColor : "#fff",
+      scaleGridLineColor : "rgba(255, 255, 255,.1)"
+    });
   },
 
   data () {
     return {
-      isLoadLocation: true,
+      isLoadLocation: false,
       showTip: false,      
       tips: '抱歉，无法获取您的位置信息，请手动选择',
       locaionLoadingText: '获取位置信息...',
@@ -262,7 +306,7 @@ h1,h2,h3,h4,h5,h6 {
   position: absolute;
   z-index: -1;
   width: 100%;
-  height: 100%;
+  height: calc(100vh + 180px);
 }
 
 </style>
