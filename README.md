@@ -10,7 +10,7 @@ Designed and Developed By 谢扬
 
 建议使用chrome、火狐、safari访问，ie、edge未测（osx系统，无windows）。
 
-手机，iphone5s有兼容性问题。
+手机，iphone5s有兼容性问题（界面）。
 
 [点击访问](http://weather.poimoe.com/ "示例")
 
