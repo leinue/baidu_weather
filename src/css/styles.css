@@ -26,6 +26,10 @@ button:hover {
 	background-color: #26a2ff;
 }
 
+h1,h2,h3,h4,h5,h6 {
+	font-weight: 100;
+}
+
 a {
   	color: #313538;
 	position: relative;
@@ -102,18 +106,31 @@ a:hover:after, a:active:after, a:focus:after {
 
 .my-info {
 	width: 100%;
-	/*height: 100%;*/
+	height: 80%;
 	text-align: right;
 }
 
 .info-header {
 	text-align: center;
+	margin-bottom: 15px;
 }
 
 .info-header h1 {
 	font-weight: 200;
 	font-size: 2em;
+	letter-spacing: 4px;
+}
+
+.info-header h2 {
 	letter-spacing: 6px;
+}
+
+.info-tip {
+	text-align: left;
+	padding: 10px;
+	padding-left: 50px;
+	padding-bottom: 30px;
+	font-weight: 600;
 }
 
 .triangle {
@@ -140,6 +157,79 @@ a:hover:after, a:active:after, a:focus:after {
 }
 
 .info-footer {
-	margin-top: 20px;
+	margin-top: 50px;
 }
+
+.logo {
+	width: 50px;
+	height: 50px;
+	background-size: cover;
+}
+
+.logo.vuejs {
+	background-image: url(../imgs/vuelogo.png);
+}
+
+.logo.git {
+	background-image: url(../imgs/gitlogo.png);
+}
+
+.logo.html5 {
+	background-image: url(../imgs/html5logo.png);
+}
+
+.logo.css3 {
+	background-image: url(../imgs/css3logo.png);
+}
+
+.logo.javascript {
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-image: url(../imgs/jslogo.png);
+}
+
+.logo.gulp {
+	height: 80px;
+	background-position: center;
+	background-size: 100% 100%;
+	background-image: url(../imgs/gulplogo.png);
+}
+
+.logo.npm {
+	margin-top: 24px;
+	width: 100px;
+	background-position: center;
+	background-size: 100% 100%;
+	background-image: url(../imgs/npmlogo.png);
+}
+
+.logo.linux {
+	margin-top: 24px;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-image: url(../imgs/linuxlogo.png);
+}
+
+.logo.docker {
+	background-position: center;
+	margin-top: 24px;
+	background-image: url(../imgs/dockerlogo.png);
+}
+
+.logo.nginx {
+	background-position: center;
+	margin-top: 24px;
+	background-image: url(../imgs/nginxlogo.png);
+}
+
+.logo.jquery {
+	background-image: url(../imgs/jquerylogo.png);
+}
+
+.logo.bootstrap {
+	background-image: url(../imgs/bootlogo.png);
+}
+
+
+
 
